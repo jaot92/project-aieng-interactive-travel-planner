@@ -24,6 +24,7 @@ wheels/
 venv/
 ENV/
 env/
+.env/
 
 # IDE
 .idea/
@@ -42,4 +43,8 @@ Thumbs.db
 
 # Project specific
 processed_data/
-data/*.zip 
+data/*.zip
+chroma_db/
+data/elmundo_chunked_*/
+data/landmarks/
+data/municipalities/ 

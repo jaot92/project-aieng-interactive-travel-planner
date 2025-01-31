@@ -1,20 +1,20 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
+from pydantic import BaseModel
 from backend.ai.function_router import AgentTools
 import logging
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+class ChatRequest(BaseModel):
+    message: str
+
 @router.post("/chat")
-async def chat_endpoint(request: Request):
-    data = await request.json()
-    message = data.get("message", "")
-    
+async def chat_endpoint(request: ChatRequest):
     try:
-        # Respuesta temporal mejorada
-        suggestions = AgentTools.find_locations(message)
+        suggestions = AgentTools.find_locations(request.message)
         return {
-            "response": f"Recibí tu mensaje: {message}",
+            "response": f"Recibí tu mensaje: {request.message}",
             "suggestions": suggestions
         }
     except Exception as e:

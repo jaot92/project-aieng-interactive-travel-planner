@@ -11,13 +11,35 @@ Crear un sistema de planificación de viajes interactivo para Puerto Rico que co
 ## Fase 1: Procesamiento de Datos Base (Branch: `feature/data-processing`)
 1. **Landmarks históricos**
    - [ ] Procesar HTMLs de landmarks existentes
-   - [ ] Extraer: coordenadas, categorías, descripciones
+     - Extraer coordenadas de formato HTML
+     - Extraer descripciones y categorías
+     - Identificar relaciones con otros puntos de interés
    - [ ] Almacenar en DB vectorial (ChromaDB)
 
 2. **Noticias históricas**
    - [ ] Procesar archivos TXT por década
    - [ ] Identificar eventos clave y ubicaciones
    - [ ] Crear embeddings para búsqueda semántica
+
+3. **Estructura de Procesamiento**
+   ```
+   data_processing/
+   ├── processors/
+   │   ├── landmark_processor.py
+   │   ├── municipality_processor.py
+   │   └── news_processor.py
+   ├── utils/
+   │   ├── html_utils.py
+   │   ├── text_utils.py
+   │   └── geo_utils.py
+   └── main.py
+   ```
+
+4. **Herramientas a Utilizar**
+   - BeautifulSoup/lxml para parseo HTML
+   - Transformers para embeddings
+   - ChromaDB para almacenamiento vectorial
+   - Geopy para manejo de coordenadas
 
 *Archivos clave*: 
 `data_processing/landmark_processor.py`, 

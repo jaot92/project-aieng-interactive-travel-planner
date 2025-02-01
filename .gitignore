@@ -48,7 +48,9 @@ chroma_db/
 data/elmundo_chunked_*/
 data/landmarks/
 data/municipalities/
+# Environment variables
 .env
+
 
 # Node
 node_modules/

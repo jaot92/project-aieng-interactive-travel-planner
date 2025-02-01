@@ -48,6 +48,7 @@ chroma_db/
 data/elmundo_chunked_*/
 data/landmarks/
 data/municipalities/
+.env
 
 # Node
 node_modules/

@@ -87,7 +87,7 @@ class RAGChain:
         query: str,
         query_type: Optional[str] = None,
         n_documents: int = 3
-    ) -> Dict[str, Any]:
+    ) -> str:
         """
         Procesa una consulta del usuario utilizando la cadena RAG.
         
@@ -97,7 +97,7 @@ class RAGChain:
             n_documents (int): Número de documentos a recuperar
             
         Returns:
-            Dict[str, Any]: Resultado que incluye la respuesta y metadatos
+            str: La respuesta generada
         """
         try:
             # Determinar el tipo de consulta si no se proporciona
@@ -116,11 +116,8 @@ class RAGChain:
                 for i, doc in enumerate(documents)
             ])
             
-            # Generar el prompt formateado
-            formatted_prompt = template.format(query=query, context=context)
-            
             # Obtener la respuesta del LLM
-            response = self.llm.generate_response(
+            response = await self.llm.generate_response(
                 prompt=query,
                 context=documents,
                 system_prompt=template.get_system_prompt(),
@@ -128,16 +125,8 @@ class RAGChain:
                 max_tokens=self.max_tokens
             )
             
-            # Preparar el resultado
-            result = {
-                'response': response,
-                'query_type': query_type,
-                'documents_used': len(documents),
-                'sources': [doc['metadata'].get('source', 'Desconocida') for doc in documents]
-            }
-            
             logger.info(f"Consulta procesada exitosamente. Tipo: {query_type}")
-            return result
+            return response
             
         except Exception as e:
             logger.error(f"Error al procesar la consulta: {str(e)}")

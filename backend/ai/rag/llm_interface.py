@@ -1,7 +1,7 @@
 from typing import Dict, Any, Optional, List
 import logging
 import os
-from openai import OpenAI
+from openai import AsyncOpenAI
 from dotenv import load_dotenv
 
 # Configurar logging
@@ -30,10 +30,10 @@ class LLMInterface:
         if not self.api_key:
             raise ValueError("No se encontró la clave de API de OpenAI en las variables de entorno")
             
-        self.client = OpenAI(api_key=self.api_key)
+        self.client = AsyncOpenAI(api_key=self.api_key)
         logger.info(f"LLMInterface inicializada con modelo {model_name}")
     
-    def generate_response(
+    async def generate_response(
         self,
         prompt: str,
         context: List[Dict[str, Any]],
@@ -75,8 +75,8 @@ class LLMInterface:
                 "content": f"Contexto:\n{formatted_context}\n\nPregunta: {prompt}"
             })
             
-            # Realizar la llamada a la API
-            response = self.client.chat.completions.create(
+            # Realizar la llamada a la API de forma asíncrona
+            response = await self.client.chat.completions.create(
                 model=self.model_name,
                 messages=messages,
                 temperature=temperature,

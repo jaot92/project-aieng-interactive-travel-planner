@@ -1,7 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from backend.ai.function_router import AgentTools
-from backend.ai.rag_system import NewsRAG
+from backend.ai.agents.function_router import AgentTools
+from backend.ai.rag.chain import RAGChain
 import logging
 
 router = APIRouter()
@@ -10,19 +10,25 @@ logger = logging.getLogger(__name__)
 class ChatRequest(BaseModel):
     message: str
 
-rag = NewsRAG()
+class ChatResponse(BaseModel):
+    response: str
+    suggestions: list = []
 
-@router.post("/chat")
+rag = RAGChain()
+
+@router.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
     try:
-        # Usar RAG para obtener resultados reales
-        rag_results = rag.query(request.message)
-        suggestions = process_rag_results(rag_results)
+        # Usar RAG para obtener resultados
+        response = await rag.process_query(request.message)
         
-        return {
-            "response": format_rag_response(rag_results),
-            "suggestions": suggestions
-        }
+        return ChatResponse(
+            response=response,
+            suggestions=[]  # Por ahora dejamos las sugerencias vacías hasta implementar la lógica
+        )
     except Exception as e:
-        logger.error(f"Error: {str(e)}")
-        return error_response() 
+        logger.error(f"Error processing chat request: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Lo siento, hubo un error al procesar tu solicitud. Por favor, intenta de nuevo."
+        ) 

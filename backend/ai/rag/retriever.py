@@ -21,7 +21,7 @@ class RAGRetriever:
         try:
             self.collection = self.client.get_collection(
                 name=collection_name,
-                embedding_function=self.embedder.embed
+                embedding_function=self.embedder
             )
             logger.info(f"Conectado exitosamente a la colección {collection_name}")
         except Exception as e:
